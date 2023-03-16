@@ -19,7 +19,7 @@ The CNN model result has a score in the kaggle competition of:
 - Private: 0.9078  Public : 0.9158
 
 W&B public plots: 
-[](https://wandb.ai/vcadillo/SIIM-ISIC-Melanoma-Classification-1st-Place-Solution/overview?workspace=user-vcadillo)
+[URL](https://wandb.ai/vcadillo/SIIM-ISIC-Melanoma-Classification-1st-Place-Solution/overview?workspace=user-vcadillo)
 
 - Accuracy
 ![Alt text](https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/Accuracy.png)
@@ -37,7 +37,7 @@ W&B public plots:
 ![Alt text](https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/Folds.png)
 
 
-[^1] This work was inspired by 1st place Melanoma winners public repository : 
+- [x] This work was inspired by 1st place Melanoma winners public repository : 
 
 https://github.com/haqishen/SIIM-ISIC-Melanoma-Classification-1st-Place-Solution
  
