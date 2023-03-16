@@ -22,19 +22,24 @@ W&B public plots:
 [URL](https://wandb.ai/vcadillo/SIIM-ISIC-Melanoma-Classification-1st-Place-Solution/overview?workspace=user-vcadillo)
 
 - Accuracy
-![Alt text](https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/Accuracy.png)
+
+<img src="https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/Accuracy.png" width="505" height="265"/>
 
 - Ensemble Network loss
-![Alt text](https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/Ensemble%20Loss.png)
+
+<img src="https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/Ensemble%20Loss.png" width="505" height="265"/>
 
 - CNN loss
-![Alt text](https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/NoMeta%20Loss.png)
+
+<img src="https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/NoMeta%20Loss.png" width="505" height="265"/>
 
 - Epochs
-![Alt text](https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/Epochs.png)
+
+<img src="https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/Epochs.png" width="505" height="265"/>
 
 - Folds
-![Alt text](https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/Folds.png)
+
+<img src="https://github.com/vcadillog/Ensemble-Deep-Learning-Melanoma-Competition-Pytorch/blob/main/images/Folds.png" width="505" height="265"/>
 
 
 - [x] This work was inspired by 1st place Melanoma winners public repository : 
