@@ -173,7 +173,7 @@ def run(fold, df, meta_features, n_meta_features, transforms_train, transforms_v
 
     if DP:
         model = nn.DataParallel(model)
-#     scheduler_cosine = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.n_epochs - 1)
+
     scheduler_cosine = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, args.n_epochs - 1)
     scheduler_warmup = GradualWarmupSchedulerV2(optimizer, multiplier=10, total_epoch=1, after_scheduler=scheduler_cosine)
     
@@ -181,7 +181,7 @@ def run(fold, df, meta_features, n_meta_features, transforms_train, transforms_v
 
     for epoch in range(1, args.n_epochs + 1):
         print(time.ctime(), f'Fold {fold}, Epoch {epoch}')
-#         scheduler_warmup.step(epoch - 1)
+
 
         train_loss = train_epoch(model, train_loader, optimizer)
         val_loss, acc, auc, auc_20 = val_epoch(model, valid_loader, mel_idx, is_ext=df_valid['is_ext'].values)
