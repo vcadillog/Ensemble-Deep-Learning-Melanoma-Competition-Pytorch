@@ -213,7 +213,7 @@ def run(fold, df, meta_features, n_meta_features, transforms_train, transforms_v
 
     torch.save(model.state_dict(), model_file3)
     
-def train():
+def train(args):
     
     df, df_test, meta_features, n_meta_features, mel_idx = get_df(
         args.kernel_type,
@@ -231,7 +231,7 @@ def train():
     for fold in folds:
         run(fold, df, meta_features, n_meta_features, transforms_train, transforms_val, mel_idx)
 
-def predict():
+def predict(args):
 
     df, df_test, meta_features, n_meta_features, mel_idx = get_df(
         args.kernel_type,
