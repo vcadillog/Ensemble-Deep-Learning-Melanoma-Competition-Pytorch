@@ -212,3 +212,104 @@ def run(fold, df, meta_features, n_meta_features, transforms_train, transforms_v
             auc_20_max = auc_20
 
     torch.save(model.state_dict(), model_file3)
+    
+def train():
+    
+    df, df_test, meta_features, n_meta_features, mel_idx = get_df(
+        args.kernel_type,
+        args.out_dim,
+        args.data_dir,
+        args.data_folder,
+        args.use_meta
+    )
+
+    transforms_train, transforms_val = get_transforms(args.image_size)
+    
+    print('Data preprocessed')
+
+    folds = [int(i) for i in args.fold.split(',')]
+    for fold in folds:
+        run(fold, df, meta_features, n_meta_features, transforms_train, transforms_val, mel_idx)
+
+def predict():
+
+    df, df_test, meta_features, n_meta_features, mel_idx = get_df(
+        args.kernel_type,
+        args.out_dim,
+        args.data_dir,
+        args.data_folder,
+        args.use_meta
+    )
+
+    transforms_train, transforms_val = get_transforms(args.image_size)
+
+    if args.DEBUG:
+        df_test = df_test.sample(args.batch_size * 3)
+    dataset_test = MelanomaDataset(df_test, 'test', meta_features, transform=transforms_val)
+    test_loader = torch.utils.data.DataLoader(dataset_test, batch_size=args.batch_size, num_workers=args.num_workers)
+
+    # load model
+    models = []
+    folds = [int(i) for i in args.fold.split(',')]
+    for fold in folds:
+#     for fold in range(5):
+
+        if args.eval == 'best':
+            model_file = os.path.join(args.model_dir, f'{args.kernel_type}_best_fold{fold}.pth')
+        elif args.eval == 'best_20':
+            model_file = os.path.join(args.model_dir, f'{args.kernel_type}_best_20_fold{fold}.pth')
+        if args.eval == 'final':
+            model_file = os.path.join(args.model_dir, f'{args.kernel_type}_final_fold{fold}.pth')
+
+        model = ModelClass(
+            args.enet_type,
+            n_meta_features=n_meta_features,
+            n_meta_dim=[int(nd) for nd in args.n_meta_dim.split(',')],
+            out_dim=args.out_dim
+        )
+        model = model.to(device)
+
+        try:  # single GPU model_file
+            model.load_state_dict(torch.load(model_file), strict=True)
+        except:  # multi GPU model_file
+            state_dict = torch.load(model_file)
+            state_dict = {k[7:] if k.startswith('module.') else k: state_dict[k] for k in state_dict.keys()}
+            model.load_state_dict(state_dict, strict=True)
+        
+        if len(os.environ['CUDA_VISIBLE_DEVICES']) > 1:
+            model = torch.nn.DataParallel(model)
+
+        model.eval()
+        models.append(model)
+
+    # predict
+    PROBS = []
+    with torch.no_grad():
+        for (data) in tqdm(test_loader):
+            if args.use_meta:
+                data, meta = data
+                data, meta = data.to(device), meta.to(device)
+                probs = torch.zeros((data.shape[0], args.out_dim)).to(device)
+                for model in models:
+                    for I in range(args.n_test):
+                        l = model(get_trans(data, I), meta)
+                        probs += l.softmax(1)
+            else:   
+                data = data.to(device)
+                probs = torch.zeros((data.shape[0], args.out_dim)).to(device)
+                for model in models:
+                    for I in range(args.n_test):
+                        l = model(get_trans(data, I))
+                        probs += l.softmax(1)
+
+            probs /= args.n_test
+            probs /= len(models)
+
+            PROBS.append(probs.detach().cpu())
+
+    PROBS = torch.cat(PROBS).numpy()
+
+    # save cvs
+    df_test['target'] = PROBS[:, mel_idx]
+    df_test[['image_name', 'target']].to_csv(os.path.join(args.sub_dir, f'sub_{args.kernel_type}_{args.eval}.csv'), index=False)
+    
